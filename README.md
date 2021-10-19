@@ -1,4 +1,6 @@
 # rangenpdf
+[![Documentation Status](https://readthedocs.org/projects/rangenpdf/badge/?version=latest)](https://rangenpdf.readthedocs.io/en/latest/?badge=latest)
+---
 Probability density function class. The class receives two `np.array` and creates an 
 interpolating spline.
 
