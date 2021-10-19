@@ -5,50 +5,56 @@ import matplotlib.pyplot as plt
 
 
 class ProbabilityDensityFunction:
-    """A docstrng for this class.
+    """
+    A docstring for this class
     """
     def __init__(self, x, y, **kwargs):
-        # x and y have to be np.array
-        self._x = np.array(x)
-        self._y = np.array(y)
-        self.pdf = interpolate.InterpolatedUnivariateSpline(self._x, self._y, **kwargs)
-        ycdf = np.array([self.pdf.integral(self._x[0], t) for t in self._x])
-        self.cdf = interpolate.InterpolatedUnivariateSpline(self._x, ycdf, **kwargs)
+        # make sure that x, y are arrays
+        xarr = np.array(x)
+        yarr = np.array(y)
+        self.pdf = interpolate.InterpolatedUnivariateSpline(xarr, yarr, **kwargs)
+        ycdf = np.array([self.pdf.integral(xarr[0], t) for t in xarr])
+        self.cdf = interpolate.InterpolatedUnivariateSpline(xarr, ycdf, **kwargs)
         xppf, ippf = np.unique(ycdf, return_index=True)
         yppf = x[ippf]
         self.ppf = interpolate.InterpolatedUnivariateSpline(xppf, yppf, **kwargs)
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
 
     def __call__(self, t):
         return self.pdf(t)
 
     def prob(self, x1, x2):
-        return self.cdf(x2)-self.cdf(x1)
+        """
+        Gets the probability that a variable is between x1 and x2.
+        :param x1: Sets the probability interval
+        :param x2: Sets the probability interval
+        :return: The probability that a variable is between x1 and x2.
+        """
+        if x1 > x2:
+            return self.cdf(x1) - self.cdf(x2)
+
+        return self.cdf(x2) - self.cdf(x1)
 
     def rnd(self, n=1000):
+        """
+        This generates a number of points, distributed with the pdf in the class attribute.
+        :param n: The number of point generated.
+        :return: an array of points distributed with the pdf
+        """
         return self.ppf(np.random.uniform(0., 1., n))
 
 
-def triangular_test():
-    triangx = np.linspace(0, 1, 100)
-    triangy = 2 * triangx
-    triangular = ProbabilityDensityFunction(triangx, triangy)
+if __name__ == "__main__":
+
+    xpdf = np.linspace(0, 1, 100)
+    ypdf = 2 * xpdf
+    pdf = ProbabilityDensityFunction(xpdf, ypdf)
 
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4)
-    ax1.plot(triangular.x, triangular.pdf(triangular.x), label='pdf')
-    ax2.plot(triangular.x, triangular.cdf(triangular.x), label='Cumulative')
-    ax3.plot(triangular.x, triangular.ppf(triangular.x), label='ppf')
-    rng = triangular.rnd(10000000)
+    ax1.plot(xpdf, pdf.pdf(xpdf), label='pdf')
+    ax2.plot(xpdf, pdf.cdf(xpdf), label='Cumulative')
+    ax3.plot(xpdf, pdf.ppf(xpdf), label='ppf')
+
+    rng = pdf.rnd(10000000)
     ax4.hist(rng, label='Random', bins=200)
 
-
-if __name__ == "__main__":
-    triangular_test()
     plt.show()
