@@ -1,10 +1,12 @@
+"""Thi docstring module"""
 import numpy as np
 from scipy import interpolate
 import matplotlib.pyplot as plt
 
 
 class ProbabilityDensityFunction:
-
+    """A docstrng for this class.
+    """
     def __init__(self, x, y, **kwargs):
         # x and y have to be np.array
         self._x = np.array(x)
