@@ -1,7 +1,6 @@
-"""Thi docstring module"""
+"""A probability density function class."""
 import numpy as np
 from scipy import interpolate
-import matplotlib.pyplot as plt
 
 
 class ProbabilityDensityFunction:
@@ -41,20 +40,3 @@ class ProbabilityDensityFunction:
         :return: an array of points distributed with the pdf
         """
         return self.ppf(np.random.uniform(0., 1., n))
-
-
-if __name__ == "__main__":
-
-    xpdf = np.linspace(0, 1, 100)
-    ypdf = 2 * xpdf
-    pdf = ProbabilityDensityFunction(xpdf, ypdf)
-
-    fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4)
-    ax1.plot(xpdf, pdf.pdf(xpdf), label='pdf')
-    ax2.plot(xpdf, pdf.cdf(xpdf), label='Cumulative')
-    ax3.plot(xpdf, pdf.ppf(xpdf), label='ppf')
-
-    rng = pdf.rnd(10000000)
-    ax4.hist(rng, label='Random', bins=200)
-
-    plt.show()
