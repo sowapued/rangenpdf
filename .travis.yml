@@ -1,5 +1,6 @@
 language: python
-os: windows
+os: linux
+dist: xenial 
 
 install:
   - pip install -r requirements.txt
